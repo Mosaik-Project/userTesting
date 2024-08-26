@@ -11,23 +11,10 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength, IsOptional, IsDate } from "class-validator";
-import { Type } from "class-transformer";
+import { IsString, IsOptional, MaxLength } from "class-validator";
 
 @InputType()
 class OtpUpdateInput {
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  code?: string | null;
-
   @ApiProperty({
     required: false,
     type: String,
@@ -41,14 +28,15 @@ class OtpUpdateInput {
 
   @ApiProperty({
     required: false,
+    type: String,
   })
-  @IsDate()
-  @Type(() => Date)
+  @IsString()
+  @MaxLength(1000)
   @IsOptional()
-  @Field(() => Date, {
+  @Field(() => String, {
     nullable: true,
   })
-  expiresAt?: Date | null;
+  otp?: string | null;
 
   @ApiProperty({
     required: false,
@@ -61,18 +49,6 @@ class OtpUpdateInput {
     nullable: true,
   })
   phone?: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  purpose?: string | null;
 }
 
 export { OtpUpdateInput as OtpUpdateInput };

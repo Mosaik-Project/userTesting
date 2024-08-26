@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 
-class PhoneOtpCreateInput {
+class GeneratePhoneOtpInput {
     @ApiProperty({
         required: true,
         type: () => String
@@ -10,4 +10,4 @@ class PhoneOtpCreateInput {
     phoneNumber!: string;
 }
 
-export { PhoneOtpCreateInput as PhoneOtpCreateInput };
+export { GeneratePhoneOtpInput as GeneratePhoneOtpInput };

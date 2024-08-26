@@ -33,12 +33,10 @@ model MosaikUser {
 }
 
 model Otp {
-  code      String?
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
   email     String?
-  expiresAt DateTime?
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  otp       String?
   phone     String?
-  purpose   String?
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime @updatedAt
 }

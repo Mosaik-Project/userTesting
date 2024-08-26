@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 
-class PhoneOtpValidationInput {
+class VerifyPhoneOtpInput {
     @ApiProperty({
         required: true,
         type: () => String
@@ -17,4 +17,4 @@ class PhoneOtpValidationInput {
     otp!: string;
 }
 
-export { PhoneOtpValidationInput as PhoneOtpValidationInput };
+export { VerifyPhoneOtpInput as VerifyPhoneOtpInput };
