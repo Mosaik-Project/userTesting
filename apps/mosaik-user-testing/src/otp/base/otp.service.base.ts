@@ -10,13 +10,16 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, Otp as PrismaOtp, User as PrismaUser } from "@prisma/client";
-import { EmailOtpCreateInput } from "../EmailOtpCreateInput";
-import { Otp } from "./Otp";
+import { Prisma, Otp as PrismaOtp } from "@prisma/client";
 import { OtpCreateInput } from "./OtpCreateInput";
-import { PhoneOtpCreateInput } from "../PhoneOtpCreateInput";
-import { EmailOtpValidationInput } from "../EmailOtpValidationInput";
-import { PhoneOtpValidationInput } from "../PhoneOtpValidationInput";
+import { Otp } from "./Otp";
+import { DeleteOtpArgs } from "./DeleteOtpArgs";
+import { OtpWhereUniqueInput } from "./OtpWhereUniqueInput";
+import { GenerateEmailOtpInput } from "../GenerateEmailOtpInput";
+import { GeneratePhoneOtpInput } from "../GeneratePhoneOtpInput";
+import { OtpUpdateInput } from "./OtpUpdateInput";
+import { VerifyEmailOtpInput } from "../VerifyEmailOtpInput";
+import { VerifyPhoneOtpInput } from "../VerifyPhoneOtpInput";
 
 export class OtpServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -40,30 +43,28 @@ export class OtpServiceBase {
   async deleteOtp(args: Prisma.OtpDeleteArgs): Promise<PrismaOtp> {
     return this.prisma.otp.delete(args);
   }
-
-  async getUser(parentId: string): Promise<PrismaUser | null> {
-    return this.prisma.otp
-      .findUnique({
-        where: { id: parentId },
-      })
-      .user();
-  }
-  async GenerateEmailOtp(args: EmailOtpCreateInput): Promise<Otp> {
+  async CreateOtp(args: OtpCreateInput): Promise<Otp> {
     throw new Error("Not implemented");
   }
-  async GenerateOtp(args: OtpCreateInput): Promise<Otp> {
+  async DeleteOtp(args: DeleteOtpArgs): Promise<Otp> {
     throw new Error("Not implemented");
   }
-  async GeneratePhoneOtp(args: PhoneOtpCreateInput): Promise<Otp> {
+  async FindOtp(args: OtpWhereUniqueInput): Promise<Otp> {
     throw new Error("Not implemented");
   }
-  async ValidateEmailOtp(args: EmailOtpValidationInput): Promise<Otp> {
+  async GenerateEmailOtp(args: GenerateEmailOtpInput): Promise<string> {
     throw new Error("Not implemented");
   }
-  async ValidateOtp(args: OtpCreateInput): Promise<Otp> {
+  async GeneratePhoneOtp(args: GeneratePhoneOtpInput): Promise<string> {
     throw new Error("Not implemented");
   }
-  async ValidatePhoneOtp(args: PhoneOtpValidationInput): Promise<Otp> {
+  async UpdateOtp(args: OtpUpdateInput): Promise<Otp> {
+    throw new Error("Not implemented");
+  }
+  async VerifyEmailOtp(args: VerifyEmailOtpInput): Promise<boolean> {
+    throw new Error("Not implemented");
+  }
+  async VerifyPhoneOtp(args: VerifyPhoneOtpInput): Promise<boolean> {
     throw new Error("Not implemented");
   }
 }

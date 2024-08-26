@@ -18,45 +18,37 @@ import { OtpService } from "../otp.service";
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
-  code: "exampleCode",
   createdAt: new Date(),
   email: "exampleEmail",
-  expiresAt: new Date(),
   id: "exampleId",
+  otp: "exampleOtp",
   phone: "examplePhone",
-  purpose: "examplePurpose",
   updatedAt: new Date(),
 };
 const CREATE_RESULT = {
-  code: "exampleCode",
   createdAt: new Date(),
   email: "exampleEmail",
-  expiresAt: new Date(),
   id: "exampleId",
+  otp: "exampleOtp",
   phone: "examplePhone",
-  purpose: "examplePurpose",
   updatedAt: new Date(),
 };
 const FIND_MANY_RESULT = [
   {
-    code: "exampleCode",
     createdAt: new Date(),
     email: "exampleEmail",
-    expiresAt: new Date(),
     id: "exampleId",
+    otp: "exampleOtp",
     phone: "examplePhone",
-    purpose: "examplePurpose",
     updatedAt: new Date(),
   },
 ];
 const FIND_ONE_RESULT = {
-  code: "exampleCode",
   createdAt: new Date(),
   email: "exampleEmail",
-  expiresAt: new Date(),
   id: "exampleId",
+  otp: "exampleOtp",
   phone: "examplePhone",
-  purpose: "examplePurpose",
   updatedAt: new Date(),
 };
 
@@ -143,7 +135,6 @@ describe("Otp", () => {
       .expect({
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
-        expiresAt: CREATE_RESULT.expiresAt.toISOString(),
         updatedAt: CREATE_RESULT.updatedAt.toISOString(),
       });
   });
@@ -156,7 +147,6 @@ describe("Otp", () => {
         {
           ...FIND_MANY_RESULT[0],
           createdAt: FIND_MANY_RESULT[0].createdAt.toISOString(),
-          expiresAt: FIND_MANY_RESULT[0].expiresAt.toISOString(),
           updatedAt: FIND_MANY_RESULT[0].updatedAt.toISOString(),
         },
       ]);
@@ -180,7 +170,6 @@ describe("Otp", () => {
       .expect({
         ...FIND_ONE_RESULT,
         createdAt: FIND_ONE_RESULT.createdAt.toISOString(),
-        expiresAt: FIND_ONE_RESULT.expiresAt.toISOString(),
         updatedAt: FIND_ONE_RESULT.updatedAt.toISOString(),
       });
   });
@@ -194,7 +183,6 @@ describe("Otp", () => {
       .expect({
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
-        expiresAt: CREATE_RESULT.expiresAt.toISOString(),
         updatedAt: CREATE_RESULT.updatedAt.toISOString(),
       })
       .then(function () {

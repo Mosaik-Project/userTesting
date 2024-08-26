@@ -11,23 +11,11 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength, IsOptional, IsDate } from "class-validator";
+import { IsDate, IsString, IsOptional, MaxLength } from "class-validator";
 import { Type } from "class-transformer";
 
 @ObjectType()
 class Otp {
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  code!: string | null;
-
   @ApiProperty({
     required: true,
   })
@@ -48,17 +36,6 @@ class Otp {
   email!: string | null;
 
   @ApiProperty({
-    required: false,
-  })
-  @IsDate()
-  @Type(() => Date)
-  @IsOptional()
-  @Field(() => Date, {
-    nullable: true,
-  })
-  expiresAt!: Date | null;
-
-  @ApiProperty({
     required: true,
     type: String,
   })
@@ -76,7 +53,7 @@ class Otp {
   @Field(() => String, {
     nullable: true,
   })
-  phone!: string | null;
+  otp!: string | null;
 
   @ApiProperty({
     required: false,
@@ -88,7 +65,7 @@ class Otp {
   @Field(() => String, {
     nullable: true,
   })
-  purpose!: string | null;
+  phone!: string | null;
 
   @ApiProperty({
     required: true,

@@ -14,7 +14,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
 import { IsOptional } from "class-validator";
-import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
 
 @InputType()
@@ -28,29 +27,7 @@ class OtpWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  code?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-    type: StringNullableFilter,
-  })
-  @Type(() => StringNullableFilter)
-  @IsOptional()
-  @Field(() => StringNullableFilter, {
-    nullable: true,
-  })
   email?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-    type: DateTimeNullableFilter,
-  })
-  @Type(() => DateTimeNullableFilter)
-  @IsOptional()
-  @Field(() => DateTimeNullableFilter, {
-    nullable: true,
-  })
-  expiresAt?: DateTimeNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -72,7 +49,7 @@ class OtpWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  phone?: StringNullableFilter;
+  otp?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -83,7 +60,7 @@ class OtpWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  purpose?: StringNullableFilter;
+  phone?: StringNullableFilter;
 }
 
 export { OtpWhereInput as OtpWhereInput };

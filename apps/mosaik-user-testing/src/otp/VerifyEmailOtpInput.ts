@@ -1,13 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 
-class EmailOtpCreateInput {
+class VerifyEmailOtpInput {
     @ApiProperty({
         required: true,
         type: () => String
     })
     @Type(() => String)
     email!: string;
+
+    @ApiProperty({
+        required: true,
+        type: () => String
+    })
+    @Type(() => String)
+    otp!: string;
 }
 
-export { EmailOtpCreateInput as EmailOtpCreateInput };
+export { VerifyEmailOtpInput as VerifyEmailOtpInput };
