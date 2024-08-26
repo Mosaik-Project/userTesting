@@ -62,12 +62,6 @@
   {
     "role": "user",
     "resource": "Otp",
-    "action": "create:any",
-    "attributes": "*"
-  },
-  {
-    "role": "user",
-    "resource": "Otp",
     "action": "update:any",
     "attributes": "*"
   },
