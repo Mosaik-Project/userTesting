@@ -28,6 +28,9 @@ import { OtpFindManyArgs } from "./OtpFindManyArgs";
 import { OtpWhereUniqueInput } from "./OtpWhereUniqueInput";
 import { OtpUpdateInput } from "./OtpUpdateInput";
 import { VerifyPhoneOtpInput } from "../VerifyPhoneOtpInput";
+import { GenerateEmailOtpInput } from "../GenerateEmailOtpInput";
+import { GeneratePhoneOtpInput } from "../GeneratePhoneOtpInput";
+import { VerifyEmailOtpInput } from "../VerifyEmailOtpInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -36,261 +39,11 @@ export class OtpControllerBase {
     protected readonly service: OtpService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
+
+ 
   @Public()
-  @common.Post()
-  @swagger.ApiCreatedResponse({ type: Otp })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async createOtp(@common.Body() data: OtpCreateInput): Promise<Otp> {
-    return await this.service.createOtp({
-      data: {
-        ...data,
-
-        user: data.user
-          ? {
-              connect: data.user,
-            }
-          : undefined,
-      },
-      select: {
-        createdAt: true,
-        email: true,
-        id: true,
-        otp: true,
-        phone: true,
-        updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get()
-  @swagger.ApiOkResponse({ type: [Otp] })
-  @ApiNestedQuery(OtpFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Otp",
-    action: "read",
-    possession: "any",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async otps(@common.Req() request: Request): Promise<Otp[]> {
-    const args = plainToClass(OtpFindManyArgs, request.query);
-    return this.service.otps({
-      ...args,
-      select: {
-        createdAt: true,
-        email: true,
-        id: true,
-        otp: true,
-        phone: true,
-        updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id")
-  @swagger.ApiOkResponse({ type: Otp })
-  @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
-  @nestAccessControl.UseRoles({
-    resource: "Otp",
-    action: "read",
-    possession: "own",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async otp(@common.Param() params: OtpWhereUniqueInput): Promise<Otp | null> {
-    const result = await this.service.otp({
-      where: params,
-      select: {
-        createdAt: true,
-        email: true,
-        id: true,
-        otp: true,
-        phone: true,
-        updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (result === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return result;
-  }
-
-  @common.UseInterceptors(AclValidateRequestInterceptor)
-  @common.Patch("/:id")
-  @swagger.ApiOkResponse({ type: Otp })
-  @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
-  @nestAccessControl.UseRoles({
-    resource: "Otp",
-    action: "update",
-    possession: "any",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async updateOtp(
-    @common.Param() params: OtpWhereUniqueInput,
-    @common.Body() data: OtpUpdateInput
-  ): Promise<Otp | null> {
-    try {
-      return await this.service.updateOtp({
-        where: params,
-        data: {
-          ...data,
-
-          user: data.user
-            ? {
-                connect: data.user,
-              }
-            : undefined,
-        },
-        select: {
-          createdAt: true,
-          email: true,
-          id: true,
-          otp: true,
-          phone: true,
-          updatedAt: true,
-
-          user: {
-            select: {
-              id: true,
-            },
-          },
-        },
-      });
-    } catch (error) {
-      if (isRecordNotFoundError(error)) {
-        throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
-        );
-      }
-      throw error;
-    }
-  }
-
-  @common.Delete("/:id")
-  @swagger.ApiOkResponse({ type: Otp })
-  @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
-  @nestAccessControl.UseRoles({
-    resource: "Otp",
-    action: "delete",
-    possession: "any",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async deleteOtp(
-    @common.Param() params: OtpWhereUniqueInput
-  ): Promise<Otp | null> {
-    try {
-      return await this.service.deleteOtp({
-        where: params,
-        select: {
-          createdAt: true,
-          email: true,
-          id: true,
-          otp: true,
-          phone: true,
-          updatedAt: true,
-
-          user: {
-            select: {
-              id: true,
-            },
-          },
-        },
-      });
-    } catch (error) {
-      if (isRecordNotFoundError(error)) {
-        throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
-        );
-      }
-      throw error;
-    }
-  }
-
-  @common.Post("/create-otp")
-  @swagger.ApiOkResponse({
-    type: Otp,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async CreateOtp(
-    @common.Body()
-    body: VerifyPhoneOtpInput
-  ): Promise<Otp> {
-    return this.service.CreateOtp(body);
-  }
-
-  @common.Delete("/delete-otp/:id")
-  @swagger.ApiOkResponse({
-    type: Otp,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async DeleteOtp(
-    @common.Body()
-    body: VerifyPhoneOtpInput
-  ): Promise<Otp> {
-    return this.service.DeleteOtp(body);
-  }
-
-  @common.Get("/find-otp/:id")
-  @swagger.ApiOkResponse({
-    type: Otp,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async FindOtp(
-    @common.Body()
-    body: VerifyPhoneOtpInput
-  ): Promise<Otp> {
-    return this.service.FindOtp(body);
-  }
-
   @common.Post("/generate-email-otp")
-  @swagger.ApiOkResponse({
-    type: String,
-  })
+  @swagger.ApiCreatedResponse({ type: Otp })
   @swagger.ApiNotFoundResponse({
     type: errors.NotFoundException,
   })
@@ -299,15 +52,14 @@ export class OtpControllerBase {
   })
   async GenerateEmailOtp(
     @common.Body()
-    body: VerifyPhoneOtpInput
-  ): Promise<string> {
+    body: GenerateEmailOtpInput
+  ): Promise<{ otp: string }> {
     return this.service.GenerateEmailOtp(body);
   }
-
+  @Public()
   @common.Post("/generate-phone-otp")
-  @swagger.ApiOkResponse({
-    type: String,
-  })
+  @swagger.ApiCreatedResponse({ type: Otp })
+
   @swagger.ApiNotFoundResponse({
     type: errors.NotFoundException,
   })
@@ -316,11 +68,11 @@ export class OtpControllerBase {
   })
   async GeneratePhoneOtp(
     @common.Body()
-    body: VerifyPhoneOtpInput
+    body: GeneratePhoneOtpInput
   ): Promise<string> {
     return this.service.GeneratePhoneOtp(body);
   }
-
+  @Public()
   @common.Post("/update-otp")
   @swagger.ApiOkResponse({
     type: Otp,
@@ -337,7 +89,7 @@ export class OtpControllerBase {
   ): Promise<Otp> {
     return this.service.UpdateOtp(body);
   }
-
+  @Public()
   @common.Post("/verify-email-otp")
   @swagger.ApiOkResponse({
     type: Boolean,
@@ -350,11 +102,12 @@ export class OtpControllerBase {
   })
   async VerifyEmailOtp(
     @common.Body()
-    body: VerifyPhoneOtpInput
+    body: VerifyEmailOtpInput
   ): Promise<boolean> {
     return this.service.VerifyEmailOtp(body);
   }
-
+  
+  @Public()
   @common.Post("/verify-phone-otp")
   @swagger.ApiOkResponse({
     type: Boolean,

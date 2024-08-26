@@ -52,19 +52,124 @@ export class OtpServiceBase {
   async FindOtp(args: OtpWhereUniqueInput): Promise<Otp> {
     throw new Error("Not implemented");
   }
-  async GenerateEmailOtp(args: GenerateEmailOtpInput): Promise<string> {
-    throw new Error("Not implemented");
+  async GenerateEmailOtp(args: GenerateEmailOtpInput): Promise<{ otp: string }> {
+    const { email } = args;
+
+    // Validate the email input
+    if (!email) {
+      throw new Error("Email is required");
+    }
+
+    // Generate a random 6-digit OTP
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Create OTP record using Prisma
+    const otpRecord = await this.prisma.otp.create({
+      data: {
+        email: email,
+        otp: otpCode,
+        phone: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+    if (!otpRecord.otp) {
+      throw new Error("OTP generation failed, no OTP received");
+    }
+    // Return the generated OTP in the response
+    return { otp: otpRecord.otp };
   }
   async GeneratePhoneOtp(args: GeneratePhoneOtpInput): Promise<string> {
-    throw new Error("Not implemented");
+    const { phoneNumber } = args;
+
+    // Validate the phone input
+    if (!phoneNumber) {
+      throw new Error("Phone number is required");
+    }
+
+    // Generate a random 6-digit OTP
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    try {
+      // Create OTP record using Prisma
+      await this.prisma.otp.create({
+        data: {
+          email: null,
+          phone: phoneNumber,
+          otp: otpCode,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      // Return the generated OTP
+      return otpCode;
+    } catch (error) {
+      console.error("Error generating OTP:", error);
+      throw new Error("Could not generate OTP. Please try again.");
+    }
   }
   async UpdateOtp(args: OtpUpdateInput): Promise<Otp> {
     throw new Error("Not implemented");
   }
   async VerifyEmailOtp(args: VerifyEmailOtpInput): Promise<boolean> {
-    throw new Error("Not implemented");
+    const { email, otp } = args;
+
+    // Validate the email and OTP inputs
+    if (!email || !otp) {
+      throw new Error("Email and OTP are required");
+    }
+
+    try {
+      // Fetch the OTP record for the given email
+      const otpRecord = await this.prisma.otp.findFirst({
+        where: {
+          email: email,
+          otp: otp,
+        },
+      });
+
+      // Check if the record exists and the OTP matches
+      if (otpRecord) {
+        // Optionally, you could also check if the OTP has expired, if you store expiration time
+        // For now, just check if the OTP exists
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      throw new Error("Could not verify OTP. Please try again.");
+    }
   }
   async VerifyPhoneOtp(args: VerifyPhoneOtpInput): Promise<boolean> {
-    throw new Error("Not implemented");
+    const { phoneNumber, otp } = args;
+
+    // Validate the phoneNumber and OTP inputs
+    if (!phoneNumber || !otp) {
+      throw new Error("phoneNumber number and OTP are required");
+    }
+
+    try {
+      // Fetch the OTP record for the given phoneNumber number
+      const otpRecord = await this.prisma.otp.findFirst({
+        where: {
+          phone: phoneNumber,
+          otp: otp,
+        },
+      });
+
+      // Check if the record exists and the OTP matches
+      if (otpRecord) {
+        // Optionally, you could also check if the OTP has expired, if you store expiration time
+        // For now, just check if the OTP exists
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      throw new Error("Could not verify OTP. Please try again.");
+    }
   }
 }
