@@ -11,15 +11,8 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsString,
-  MaxLength,
-  IsOptional,
-  IsDate,
-  ValidateNested,
-} from "class-validator";
+import { IsString, MaxLength, IsOptional, IsDate } from "class-validator";
 import { Type } from "class-transformer";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
 class OtpCreateInput {
@@ -34,6 +27,17 @@ class OtpCreateInput {
     nullable: true,
   })
   code?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  email?: string | null;
 
   @ApiProperty({
     required: false,
@@ -56,19 +60,19 @@ class OtpCreateInput {
   @Field(() => String, {
     nullable: true,
   })
-  purpose?: string | null;
+  phone?: string | null;
 
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: String,
   })
-  @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @IsString()
+  @MaxLength(1000)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => String, {
     nullable: true,
   })
-  user?: UserWhereUniqueInput | null;
+  purpose?: string | null;
 }
 
 export { OtpCreateInput as OtpCreateInput };

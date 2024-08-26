@@ -50,6 +50,17 @@ class OtpOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+  email?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
   expiresAt?: SortOrder;
 
   @ApiProperty({
@@ -72,6 +83,17 @@ class OtpOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+  phone?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
   purpose?: SortOrder;
 
   @ApiProperty({
@@ -84,17 +106,6 @@ class OtpOrderByInput {
     nullable: true,
   })
   updatedAt?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @IsOptional()
-  @IsEnum(SortOrder)
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  userId?: SortOrder;
 }
 
 export { OtpOrderByInput as OtpOrderByInput };

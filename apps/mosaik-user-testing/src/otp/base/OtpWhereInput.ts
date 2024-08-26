@@ -13,10 +13,9 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { IsOptional } from "class-validator";
 import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
 class OtpWhereInput {
@@ -30,6 +29,17 @@ class OtpWhereInput {
     nullable: true,
   })
   code?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  email?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -62,19 +72,18 @@ class OtpWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  purpose?: StringNullableFilter;
+  phone?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: StringNullableFilter,
   })
-  @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @Type(() => StringNullableFilter)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  user?: UserWhereUniqueInput;
+  purpose?: StringNullableFilter;
 }
 
 export { OtpWhereInput as OtpWhereInput };

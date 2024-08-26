@@ -45,28 +45,16 @@ export class OtpControllerBase {
   })
   async createOtp(@common.Body() data: OtpCreateInput): Promise<Otp> {
     return await this.service.createOtp({
-      data: {
-        ...data,
-
-        user: data.user
-          ? {
-              connect: data.user,
-            }
-          : undefined,
-      },
+      data: data,
       select: {
         code: true,
         createdAt: true,
+        email: true,
         expiresAt: true,
         id: true,
+        phone: true,
         purpose: true,
         updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }
@@ -90,16 +78,12 @@ export class OtpControllerBase {
       select: {
         code: true,
         createdAt: true,
+        email: true,
         expiresAt: true,
         id: true,
+        phone: true,
         purpose: true,
         updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }
@@ -122,16 +106,12 @@ export class OtpControllerBase {
       select: {
         code: true,
         createdAt: true,
+        email: true,
         expiresAt: true,
         id: true,
+        phone: true,
         purpose: true,
         updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
     if (result === null) {
@@ -161,28 +141,16 @@ export class OtpControllerBase {
     try {
       return await this.service.updateOtp({
         where: params,
-        data: {
-          ...data,
-
-          user: data.user
-            ? {
-                connect: data.user,
-              }
-            : undefined,
-        },
+        data: data,
         select: {
           code: true,
           createdAt: true,
+          email: true,
           expiresAt: true,
           id: true,
+          phone: true,
           purpose: true,
           updatedAt: true,
-
-          user: {
-            select: {
-              id: true,
-            },
-          },
         },
       });
     } catch (error) {
@@ -215,16 +183,12 @@ export class OtpControllerBase {
         select: {
           code: true,
           createdAt: true,
+          email: true,
           expiresAt: true,
           id: true,
+          phone: true,
           purpose: true,
           updatedAt: true,
-
-          user: {
-            select: {
-              id: true,
-            },
-          },
         },
       });
     } catch (error) {

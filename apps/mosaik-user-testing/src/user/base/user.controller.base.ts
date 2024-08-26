@@ -26,9 +26,6 @@ import { User } from "./User";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
 import { UserUpdateInput } from "./UserUpdateInput";
-import { OtpFindManyArgs } from "../../otp/base/OtpFindManyArgs";
-import { Otp } from "../../otp/base/Otp";
-import { OtpWhereUniqueInput } from "../../otp/base/OtpWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -206,109 +203,5 @@ export class UserControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/otps")
-  @ApiNestedQuery(OtpFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Otp",
-    action: "read",
-    possession: "any",
-  })
-  async findOtps(
-    @common.Req() request: Request,
-    @common.Param() params: UserWhereUniqueInput
-  ): Promise<Otp[]> {
-    const query = plainToClass(OtpFindManyArgs, request.query);
-    const results = await this.service.findOtps(params.id, {
-      ...query,
-      select: {
-        code: true,
-        createdAt: true,
-        expiresAt: true,
-        id: true,
-        purpose: true,
-        updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
-  }
-
-  @common.Post("/:id/otps")
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "update",
-    possession: "any",
-  })
-  async connectOtps(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: OtpWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      otps: {
-        connect: body,
-      },
-    };
-    await this.service.updateUser({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Patch("/:id/otps")
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "update",
-    possession: "any",
-  })
-  async updateOtps(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: OtpWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      otps: {
-        set: body,
-      },
-    };
-    await this.service.updateUser({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Delete("/:id/otps")
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "update",
-    possession: "any",
-  })
-  async disconnectOtps(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: OtpWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      otps: {
-        disconnect: body,
-      },
-    };
-    await this.service.updateUser({
-      where: params,
-      data,
-      select: { id: true },
-    });
   }
 }
