@@ -11,6 +11,12 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { PrismaService } from "../../prisma/prisma.service";
 import { Prisma, Otp as PrismaOtp, User as PrismaUser } from "@prisma/client";
+import { EmailOtpCreateInput } from "../EmailOtpCreateInput";
+import { Otp } from "./Otp";
+import { OtpCreateInput } from "./OtpCreateInput";
+import { PhoneOtpCreateInput } from "../PhoneOtpCreateInput";
+import { EmailOtpValidationInput } from "../EmailOtpValidationInput";
+import { PhoneOtpValidationInput } from "../PhoneOtpValidationInput";
 
 export class OtpServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -41,5 +47,23 @@ export class OtpServiceBase {
         where: { id: parentId },
       })
       .user();
+  }
+  async GenerateEmailOtp(args: EmailOtpCreateInput): Promise<Otp> {
+    throw new Error("Not implemented");
+  }
+  async GenerateOtp(args: OtpCreateInput): Promise<Otp> {
+    throw new Error("Not implemented");
+  }
+  async GeneratePhoneOtp(args: PhoneOtpCreateInput): Promise<Otp> {
+    throw new Error("Not implemented");
+  }
+  async ValidateEmailOtp(args: EmailOtpValidationInput): Promise<Otp> {
+    throw new Error("Not implemented");
+  }
+  async ValidateOtp(args: OtpCreateInput): Promise<Otp> {
+    throw new Error("Not implemented");
+  }
+  async ValidatePhoneOtp(args: PhoneOtpValidationInput): Promise<Otp> {
+    throw new Error("Not implemented");
   }
 }
