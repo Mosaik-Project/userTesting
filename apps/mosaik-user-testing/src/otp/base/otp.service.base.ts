@@ -10,7 +10,7 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, Otp as PrismaOtp, User as PrismaUser } from "@prisma/client";
+import { Prisma, Otp as PrismaOtp } from "@prisma/client";
 import { EmailOtpCreateInput } from "../EmailOtpCreateInput";
 import { Otp } from "./Otp";
 import { OtpCreateInput } from "./OtpCreateInput";
@@ -39,14 +39,6 @@ export class OtpServiceBase {
   }
   async deleteOtp(args: Prisma.OtpDeleteArgs): Promise<PrismaOtp> {
     return this.prisma.otp.delete(args);
-  }
-
-  async getUser(parentId: string): Promise<PrismaUser | null> {
-    return this.prisma.otp
-      .findUnique({
-        where: { id: parentId },
-      })
-      .user();
   }
   async GenerateEmailOtp(args: EmailOtpCreateInput): Promise<Otp> {
     throw new Error("Not implemented");

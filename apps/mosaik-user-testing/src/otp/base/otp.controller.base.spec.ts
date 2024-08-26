@@ -20,16 +20,20 @@ const existingId = "existingId";
 const CREATE_INPUT = {
   code: "exampleCode",
   createdAt: new Date(),
+  email: "exampleEmail",
   expiresAt: new Date(),
   id: "exampleId",
+  phone: "examplePhone",
   purpose: "examplePurpose",
   updatedAt: new Date(),
 };
 const CREATE_RESULT = {
   code: "exampleCode",
   createdAt: new Date(),
+  email: "exampleEmail",
   expiresAt: new Date(),
   id: "exampleId",
+  phone: "examplePhone",
   purpose: "examplePurpose",
   updatedAt: new Date(),
 };
@@ -37,8 +41,10 @@ const FIND_MANY_RESULT = [
   {
     code: "exampleCode",
     createdAt: new Date(),
+    email: "exampleEmail",
     expiresAt: new Date(),
     id: "exampleId",
+    phone: "examplePhone",
     purpose: "examplePurpose",
     updatedAt: new Date(),
   },
@@ -46,8 +52,10 @@ const FIND_MANY_RESULT = [
 const FIND_ONE_RESULT = {
   code: "exampleCode",
   createdAt: new Date(),
+  email: "exampleEmail",
   expiresAt: new Date(),
   id: "exampleId",
+  phone: "examplePhone",
   purpose: "examplePurpose",
   updatedAt: new Date(),
 };
