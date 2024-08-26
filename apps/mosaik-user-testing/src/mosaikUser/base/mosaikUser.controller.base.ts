@@ -27,13 +27,18 @@ import { MosaikUser } from "./MosaikUser";
 import { MosaikUserFindManyArgs } from "./MosaikUserFindManyArgs";
 import { MosaikUserWhereUniqueInput } from "./MosaikUserWhereUniqueInput";
 import { MosaikUserUpdateInput } from "./MosaikUserUpdateInput";
+import { LoginMosaikUserInput } from "../LoginMosaikUserInput";
+import { TokenService } from "src/auth/token.service";
+import { MosaikUser as PrismaMosaikUser } from "@prisma/client";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
 export class MosaikUserControllerBase {
   constructor(
     protected readonly service: MosaikUserService,
-    protected readonly rolesBuilder: nestAccessControl.RolesBuilder
+    protected readonly rolesBuilder: nestAccessControl.RolesBuilder,
+    protected readonly tokenService :TokenService
+
   ) {}
   @Public()
   @common.Post()
@@ -58,6 +63,56 @@ export class MosaikUserControllerBase {
         updatedAt: true,
       },
     });
+  }
+
+  
+  @Public()
+  @common.Post("/login")
+  @swagger.ApiCreatedResponse({ type: MosaikUser })
+
+  @swagger.ApiNotFoundResponse({
+    type: errors.NotFoundException,
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async LoginMosaikUser(
+    @common.Body()
+    body: LoginMosaikUserInput
+  ): Promise<{ user: PrismaMosaikUser; token: string }>  {
+    return this.service.LoginMosaikUser(body);
+  }
+
+  @common.Post("/verify-email-otp")
+  @swagger.ApiCreatedResponse({ type: MosaikUser })
+
+  @swagger.ApiNotFoundResponse({
+    type: errors.NotFoundException,
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async VerifyEmailOtp(
+    @common.Body()
+    body: MosaikUserCreateInput
+  ): Promise<boolean> {
+    return this.service.VerifyEmailOtp(body);
+  }
+
+  @common.Post("/verify-phone-otp")
+  @swagger.ApiCreatedResponse({ type: MosaikUser })
+
+  @swagger.ApiNotFoundResponse({
+    type: errors.NotFoundException,
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async VerifyPhoneOtp(
+    @common.Body()
+    body: MosaikUserCreateInput
+  ): Promise<boolean> {
+    return this.service.VerifyPhoneOtp(body);
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
@@ -241,55 +296,5 @@ export class MosaikUserControllerBase {
   ): Promise<string> {
     return this.service.GeneratePhoneOtp(body);
   }
-
-  @common.Post("/login")
-  @swagger.ApiOkResponse({
-    type: String,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async LoginMosaikUser(
-    @common.Body()
-    body: MosaikUserCreateInput
-  ): Promise<string> {
-    return this.service.LoginMosaikUser(body);
-  }
-
-  @common.Post("/verify-email-otp")
-  @swagger.ApiOkResponse({
-    type: Boolean,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async VerifyEmailOtp(
-    @common.Body()
-    body: MosaikUserCreateInput
-  ): Promise<boolean> {
-    return this.service.VerifyEmailOtp(body);
-  }
-
-  @common.Post("/verify-phone-otp")
-  @swagger.ApiOkResponse({
-    type: Boolean,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async VerifyPhoneOtp(
-    @common.Body()
-    body: MosaikUserCreateInput
-  ): Promise<boolean> {
-    return this.service.VerifyPhoneOtp(body);
-  }
+  
 }
