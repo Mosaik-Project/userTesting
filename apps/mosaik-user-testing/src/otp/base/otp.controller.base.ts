@@ -28,6 +28,7 @@ import { OtpFindManyArgs } from "./OtpFindManyArgs";
 import { OtpWhereUniqueInput } from "./OtpWhereUniqueInput";
 import { OtpUpdateInput } from "./OtpUpdateInput";
 import { PhoneOtpValidationInput } from "../PhoneOtpValidationInput";
+import { EmailOtpCreateInput } from "../EmailOtpCreateInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -236,10 +237,10 @@ export class OtpControllerBase {
     }
   }
 
+
+  @Public()
   @common.Post("/generate-email-otp")
-  @swagger.ApiOkResponse({
-    type: Otp,
-  })
+  @swagger.ApiCreatedResponse({ type: Otp })
   @swagger.ApiNotFoundResponse({
     type: errors.NotFoundException,
   })
@@ -248,27 +249,27 @@ export class OtpControllerBase {
   })
   async GenerateEmailOtp(
     @common.Body()
-    body: PhoneOtpValidationInput
+    body: EmailOtpCreateInput
   ): Promise<Otp> {
     return this.service.GenerateEmailOtp(body);
   }
 
-  @common.Post("/generate-otp")
-  @swagger.ApiOkResponse({
-    type: Otp,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async GenerateOtp(
-    @common.Body()
-    body: PhoneOtpValidationInput
-  ): Promise<Otp> {
-    return this.service.GenerateOtp(body);
-  }
+  // @common.Post("/generate-otp")
+  // @swagger.ApiOkResponse({
+  //   type: Otp,
+  // })
+  // @swagger.ApiNotFoundResponse({
+  //   type: errors.NotFoundException,
+  // })
+  // @swagger.ApiForbiddenResponse({
+  //   type: errors.ForbiddenException,
+  // })
+  // async GenerateOtp(
+  //   @common.Body()
+  //   body: PhoneOtpValidationInput
+  // ): Promise<Otp> {
+  //   return this.service.GenerateOtp(body);
+  // }
 
   @common.Post("/generate-phone-otp")
   @swagger.ApiOkResponse({
@@ -304,22 +305,22 @@ export class OtpControllerBase {
     return this.service.ValidateEmailOtp(body);
   }
 
-  @common.Post("/validate-otp")
-  @swagger.ApiOkResponse({
-    type: Otp,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async ValidateOtp(
-    @common.Body()
-    body: PhoneOtpValidationInput
-  ): Promise<Otp> {
-    return this.service.ValidateOtp(body);
-  }
+  // @common.Post("/validate-otp")
+  // @swagger.ApiOkResponse({
+  //   type: Otp,
+  // })
+  // @swagger.ApiNotFoundResponse({
+  //   type: errors.NotFoundException,
+  // })
+  // @swagger.ApiForbiddenResponse({
+  //   type: errors.ForbiddenException,
+  // })
+  // async ValidateOtp(
+  //   @common.Body()
+  //   body: PhoneOtpValidationInput
+  // ): Promise<Otp> {
+  //   return this.service.ValidateOtp(body);
+  // }
 
   @common.Post("/validate-phone-otp")
   @swagger.ApiOkResponse({
