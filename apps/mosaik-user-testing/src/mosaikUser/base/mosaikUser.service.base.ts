@@ -15,11 +15,14 @@ import { PasswordService } from "../../auth/password.service";
 import { transformStringFieldUpdateInput } from "../../prisma.util";
 import { MosaikUserCreateInput } from "./MosaikUserCreateInput";
 import { LoginMosaikUserInput } from "../LoginMosaikUserInput";
+import { TokenService } from "src/auth/token.service";
 
 export class MosaikUserServiceBase {
   constructor(
     protected readonly prisma: PrismaService,
-    protected readonly passwordService: PasswordService
+    protected readonly passwordService: PasswordService,
+    protected readonly tokenService :TokenService
+
   ) {}
 
   async count(
@@ -41,6 +44,9 @@ export class MosaikUserServiceBase {
   async createMosaikUser(
     args: Prisma.MosaikUserCreateArgs
   ): Promise<PrismaMosaikUser> {
+    if (!args.data.password) {
+      throw new Error("Password is required");
+    }
     return this.prisma.mosaikUser.create({
       ...args,
 
@@ -53,21 +59,21 @@ export class MosaikUserServiceBase {
   async updateMosaikUser(
     args: Prisma.MosaikUserUpdateArgs
   ): Promise<PrismaMosaikUser> {
+    // Check if args.data.password exists and is a string
+    const passwordUpdate =
+      args.data.password && typeof args.data.password === 'string'
+        ? { set: await this.passwordService.hash(args.data.password) }
+        : undefined;
+  
     return this.prisma.mosaikUser.update({
       ...args,
-
       data: {
         ...args.data,
-
-        password:
-          args.data.password &&
-          (await transformStringFieldUpdateInput(
-            args.data.password,
-            (password) => this.passwordService.hash(password)
-          )),
+        password: passwordUpdate, // Set hashed password or undefined
       },
     });
   }
+  
   async deleteMosaikUser(
     args: Prisma.MosaikUserDeleteArgs
   ): Promise<PrismaMosaikUser> {
@@ -79,9 +85,51 @@ export class MosaikUserServiceBase {
   async GeneratePhoneOtp(args: MosaikUserCreateInput): Promise<string> {
     throw new Error("Not implemented");
   }
-  async LoginMosaikUser(args: LoginMosaikUserInput): Promise<string> {
-    throw new Error("Not implemented");
+  async LoginMosaikUser(args: LoginMosaikUserInput): Promise<{ user: PrismaMosaikUser; token: string }>  {
+    // Step 1: Find the user by email or phone number
+    const user = await this.prisma.mosaikUser.findFirst({
+      where: {
+        OR: [
+          { email: args.emailOrPhone },
+          { phoneNumber: args.emailOrPhone }
+        ],
+      },
+    });
+  
+    if (!user) {
+      throw new Error('Invalid credentials');
+    }
+  
+    // Step 2: Verify the password
+    if (!user.password) {
+      throw new Error('Invalid credentials');
+    }
+  
+    const isPasswordValid = await this.passwordService.compare(args.password, user.password);
+  
+    if (!isPasswordValid) {
+      throw new Error('Invalid credentials');
+    }
+  
+    // Step 3: Generate a JWT token
+    const username = user.email ?? user.phoneNumber;
+  
+    if (!username) {
+      throw new Error('Invalid credentials');
+    }
+  
+    const token = await this.tokenService.createToken({
+      id: user.id,
+      username, // Ensure this is a string and not null
+      password: user.password, // This should be avoided unless required for specific reasons
+    });
+  
+    // Step 4: Return user data and token
+    return { user, token };
   }
+  
+  
+  
   async VerifyEmailOtp(args: MosaikUserCreateInput): Promise<boolean> {
     throw new Error("Not implemented");
   }

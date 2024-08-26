@@ -52,6 +52,6 @@ import { UserModule } from "../user/user.module";
     TokenService,
   ],
   controllers: [AuthController],
-  exports: [AuthService, PasswordService],
+  exports: [AuthService, PasswordService,TokenService],
 })
 export class AuthModule {}
